@@ -1,10 +1,21 @@
 import { Request, Response } from "express";
 import { prisma } from "@/prisma";
+import { title } from "process";
 
 class QuestionsController {
   async index(request: Request, response: Response) {
-    const questions = await prisma.questions.findMany();
-    
+    const questions = await prisma.questions.findMany({
+      where: {
+        title: {
+          contains: request.query.title?.toString().trim(),
+          mode: "insensitive",
+        },
+      },
+      orderBy: {
+        title: "asc",
+      },
+    });
+
     return response.json(questions);
   }
 
