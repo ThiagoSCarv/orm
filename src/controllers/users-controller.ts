@@ -4,7 +4,7 @@ import { prisma } from "@/prisma";
 class UsersController {
   async index(request: Request, response: Response) {
     const users = await prisma.users.findMany();
-    
+
     return response.json(users);
   }
 
@@ -17,7 +17,11 @@ class UsersController {
   }
 
   async show(request: Request, response: Response) {
-    return response.json();
+    const { id } = request.params;
+
+    const user = await prisma.users.findUnique({ where: { id } });
+
+    return response.json(user);
   }
 }
 
